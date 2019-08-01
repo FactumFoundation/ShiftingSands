@@ -54,50 +54,53 @@ void setup()
   highFreqWave.patch(highFreqPan);
   highFreqPan.patch( out );
 
-  freqList.add(513);
-  freqList.add(704);
-  freqList.add(759);
-  freqList.add(802);
-  freqList.add(854);
-  freqList.add(975);
-  //freqList.add(978);
-  freqList.add(1134);
-  freqList.add(1235);
-  freqList.add(1320);
-  freqList.add(1510);
-  freqList.add(1763); 
-  freqList.add(1900);  
-  freqList.add(2035); 
-  freqList.add(2331);
-  freqList.add(2658); 
-  freqList.add(2689);  
-  freqList.add(3018); 
-  freqList.add(3406);  
-  freqList.add(3589); //**--* 
-  freqList.add(3614);
-  freqList.add(3822);
-  freqList.add(4051);
-  freqList.add(4121);
-  freqList.add(4169);
-  freqList.add(4250);
-  freqList.add(4289);
-  freqList.add(4406);
-  freqList.add(4566);
-  freqList.add(4699);
-  freqList.add(4786);
+  freqList.add(514);
+  freqList.add(703);
+  freqList.add(758);
+  freqList.add(855);
+  freqList.add(970);
+  freqList.add(1370);
+  //freqList.add(1465);
+  freqList.add(1508);
+  freqList.add(1756); 
+  freqList.add(2000);  
+  freqList.add(2034); 
+  freqList.add(2143); 
+  freqList.add(2270); 
+  freqList.add(2582);
+  freqList.add(2651);
+  freqList.add(2929);
+  freqList.add(3037); 
+  freqList.add(3128); 
+  freqList.add(3390);
+  freqList.add(3548); 
+  /*
+  freqList.add(3589); 
+   freqList.add(3614);
+   freqList.add(3822);
+   freqList.add(4051);
+   */
+  freqList.add(4113);
+  freqList.add(4161);
+  freqList.add(4278);
+  freqList.add(4394);
+  freqList.add(4703);
+  freqList.add(5262);
+  freqList.add(5271);
+  /*
   freqList.add(4794);
-  freqList.add(5057);
-  freqList.add(5371);
-  freqList.add(5656);
-  freqList.add(5855);
-  freqList.add(5848);
-  freqList.add(6014);
-
+   freqList.add(5057);
+   freqList.add(5371);
+   freqList.add(5656);
+   freqList.add(5855);
+   freqList.add(5848);
+   freqList.add(6014);
+   */
   currentFreqIndex =0;
   Ani.init(this);
 
   // define a Ani with callbacks, specify the method name after the keywords: onStart, onEnd, onDelayEnd and onUpdate 
-  lowFreqAni = new Ani(this, 4.5, "oscFreq", 513, Ani.LINEAR, "onEnd:nextFreq");
+  lowFreqAni = new Ani(this, 4.5, "oscFreq", 514, Ani.LINEAR, "onEnd:nextFreq");
   lowFreqAmpAni = new Ani(this, 4.5, "lowFreqAmplitude", 100, Ani.LINEAR);
 
 
@@ -108,26 +111,52 @@ void nextFreq()
 {
 
   currentFreqIndex++;
-
+  /*
   currentFreqIndex = (int)random(freqList.size()-1);
+   
+   */
   if (currentFreqIndex >=freqList.size())
     currentFreqIndex = 0;
 
-  int dice = (int)random(6);
+  int dice;
   boolean isMovingPattern = false;
-  if (dice >= 1)
-  {
-    lowFreqAni = new Ani(this, 1.5, 10.5, "oscFreq", (int)freqList.get(currentFreqIndex), Ani.LINEAR, "onEnd:nextFreq");
-  } else
-  {
-    lowFreqAni = new Ani(this, 0.9, 10.5, "oscFreq", 3597, Ani.LINEAR, "onEnd:nextFreq"); 
-    isMovingPattern = true;
-  }
+  //int dice = (int)random(600);
+  //boolean isMovingPattern = false;
+  //if (dice >= 1)
+  //{
+  lowFreqAni = new Ani(this, 1.5, 10.5, "oscFreq", (int)freqList.get(currentFreqIndex), Ani.LINEAR, "onEnd:nextFreq");
+  //} else
+  //{
+  //  lowFreqAni = new Ani(this, 0.9, 10.5, "oscFreq", 3597, Ani.LINEAR, "onEnd:nextFreq"); 
+  //  isMovingPattern = true;
+  //}
 
 
   dice = (int)random(2); 
-  float randomHighFreq = 0;
+  int randomHighFreq = 0;
   if (dice < 1)
+  {
+    highFreqAmpAni = new Ani(this, 1.0, "highFreqAmplitude", 100, Ani.LINEAR);
+    lowFreqAmpAni = new Ani(this, 3.5, "lowFreqAmplitude", 0, Ani.LINEAR);
+
+    // high freq patterns
+    dice = (int)random(6); 
+
+    //29059, 30784, 32453
+    switch(dice) {
+    case 1: 
+      randomHighFreq   = 29138;
+      break;
+    case 2: 
+      randomHighFreq   = 30889;
+      break;
+    default:
+      randomHighFreq   = (int)random(29000, 33000);
+      break;
+    }
+    highFreqWave.setFrequency(randomHighFreq);
+    highFreqWaveValue = (int)randomHighFreq;
+  } else
   {
 
     highFreqAmpAni = new Ani(this, 1.0, "highFreqAmplitude", 0, Ani.LINEAR);
@@ -136,33 +165,11 @@ void nextFreq()
       lowFreqAmpAni = new Ani(this, 3.5, "lowFreqAmplitude", 100, Ani.LINEAR);
     else
       lowFreqAmpAni = new Ani(this, 3.5, "lowFreqAmplitude", 65, Ani.LINEAR);
-  } else
-  {
-
-    highFreqAmpAni = new Ani(this, 1.0, "highFreqAmplitude", 100, Ani.LINEAR);
-    lowFreqAmpAni = new Ani(this, 3.5, "lowFreqAmplitude", 0, Ani.LINEAR);
-
-
-    // high freq patterns
-    dice = (int)random(6); 
-
-    switch(dice) {
-    case 1: 
-      randomHighFreq   = 29138;
-      break;
-    default:
-      randomHighFreq   = random(29000, 33000);
-      break;
-    }
-
-
-    highFreqWave.setFrequency(randomHighFreq);
-    highFreqWaveValue = (int)randomHighFreq;
   }
 
 
 
-  println( "NextLowFreq: " +  "[ " + currentFreqIndex  + " ]" + (int)freqList.get(currentFreqIndex)/10.0f);
+  println( "NextLowFreq: " +  "[ " + currentFreqIndex  + " ]" + (int)((int)freqList.get(currentFreqIndex)/10.0f));
   println( "CurrentHighFreq: " + randomHighFreq);
 }
 
