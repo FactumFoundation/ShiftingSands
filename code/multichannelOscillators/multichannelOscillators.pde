@@ -33,8 +33,6 @@ void setup()
 void createPlates()
 {
   plate = new Plate (this, AudioSystem.getMixer(mixerInfo[2]));
-
-
   plate_2 = new Plate (this, AudioSystem.getMixer(mixerInfo[4]));
 
 

@@ -2,7 +2,7 @@
 #X obj 252 599 dac~;
 #X obj 215 508 osc~;
 #X obj 216 312 nbx 5 14 -1e+037 1e+037 0 0 empty empty empty 0 -8 0
-10 -262144 -1 -1 340.6 256;
+10 -262144 -1 -1 177.806 256;
 #X obj 145 102 key;
 #X floatatom 143 124 5 0 0 0 - - -;
 #X obj 144 167 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
@@ -37,7 +37,7 @@
 #X obj 510 170 select 113 119 101 114;
 #X msg 354 124 100;
 #X msg 312 123 1;
-#X msg 256 123 0.1;
+#X msg 257 123 0.1;
 #X connect 1 0 17 0;
 #X connect 2 0 8 1;
 #X connect 2 0 11 1;
