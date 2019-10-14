@@ -26,7 +26,7 @@ int highFreqWaveValue;
 int oscFreq = 0;
 
 ArrayList freqList = new ArrayList();
-int currentFreqIndex = 0;
+int currentFreqIndex = -1; //-1;
 Ani lowFreqAni;
 Ani lowFreqAmpAni;
 
@@ -35,6 +35,14 @@ Ani highFreqAmpAni;
 
 
 float timeBetweenFrequencies = 10.5f;
+
+int calibrationFreq = 3953;
+
+// 0 -> Calibration mode
+// 1 -> Play mode
+// 2 -> Play random mode
+
+int currentMode = 1;
 
 void setup()
 {
@@ -102,11 +110,13 @@ void setup()
   freqList.add(964); 
   freqList.add(967); 
   freqList.add(969);  //  freqList.add(971); 
-  freqList.add(981); 
-  freqList.add(1080); 
+  freqList.add(981);
+  freqList.add(1004); 
   freqList.add(1027); 
   freqList.add(1051); 
+  freqList.add(1076);   
   freqList.add(1080); 
+
   freqList.add(1107); 
   freqList.add(1130); 
   freqList.add(1217); //puede bajar
@@ -116,14 +126,19 @@ void setup()
   freqList.add(1301); 
   freqList.add(1311);
   freqList.add(1318);
-  freqList.add(1332); 
+  freqList.add(1331); 
+  freqList.add(1445); 
   freqList.add(1494); 
   freqList.add(1510);
+  freqList.add(1529);
+  freqList.add(1606);
   freqList.add(1644);
   freqList.add(1687);
   freqList.add(1699);  //--> OJO 4 o 5
+  freqList.add(1702);
   freqList.add(1721);
   freqList.add(1721);
+  freqList.add(1744);
   freqList.add(1748);
   freqList.add(1759);
   freqList.add(1762);  //--> mirar por aqui de 0.01
@@ -132,30 +147,40 @@ void setup()
 
   freqList.add(1796);
   freqList.add(1814);
-  freqList.add(1849);
+
+  freqList.add(1852);
+
+  freqList.add(2038);
   freqList.add(2036);
+  freqList.add(2043);  
+
   freqList.add(2070);
   freqList.add(2076);
   freqList.add(2104);
   freqList.add(2177);
+  freqList.add(2208);
+  freqList.add(2258);
   freqList.add(2285);
   freqList.add(2320);
+  freqList.add(2325);
   freqList.add(2340);
+  freqList.add(2374);
   freqList.add(2383);
   freqList.add(2464);  
   freqList.add(2490);
   freqList.add(2499);
   freqList.add(2529);
   freqList.add(2534);
-  freqList.add(2568); //<- 168.8
+
 
   ////////////////
+  freqList.add(2569); 
 
 
 
-
-  freqList.add(2594);
+  freqList.add(2596);
   freqList.add(2604);
+
   freqList.add(2630);
   freqList.add(2658);
   freqList.add(2665);
@@ -171,6 +196,7 @@ void setup()
   freqList.add(2836);
   freqList.add(2846);
   freqList.add(2910); 
+  freqList.add(2922); 
   freqList.add(2936);
   freqList.add(2948);
   freqList.add(2989);
@@ -188,43 +214,43 @@ void setup()
   freqList.add(3154);
 
   freqList.add(3167);
+    freqList.add(3828);
   freqList.add(3842);
 
   freqList.add(3912);
   freqList.add(4317);
 
-/*
+  /*
   freqList.add(6265);
-  freqList.add(6346);
-  freqList.add(6384);
-  freqList.add(6414);
-  freqList.add(6452);
-  freqList.add(6480);
-  freqList.add(6510);
-  freqList.add(6531);
-  freqList.add(6575);
-  freqList.add(6677);
-  freqList.add(6703);
-  freqList.add(6758);
-  freqList.add(7523);
-  freqList.add(7660);   
-  freqList.add(7678);
-  freqList.add(7730);
-  freqList.add(7739);
-  freqList.add(7797);
-  freqList.add(7867);
-  freqList.add(7974);
-  freqList.add(8001);
-  freqList.add(8132);
-  freqList.add(8213);
-  freqList.add(8265);
-  freqList.add(8345);
-  freqList.add(8419);
-  freqList.add(8457);
-  freqList.add(8472);
-*/
+   freqList.add(6346);
+   freqList.add(6384);
+   freqList.add(6414);
+   freqList.add(6452);
+   freqList.add(6480);
+   freqList.add(6510);
+   freqList.add(6531);
+   freqList.add(6575);
+   freqList.add(6677);
+   freqList.add(6703);
+   freqList.add(6758);
+   freqList.add(7523);
+   freqList.add(7660);   
+   freqList.add(7678);
+   freqList.add(7730);
+   freqList.add(7739);
+   freqList.add(7797);
+   freqList.add(7867);
+   freqList.add(7974);
+   freqList.add(8001);
+   freqList.add(8132);
+   freqList.add(8213);
+   freqList.add(8265);
+   freqList.add(8345);
+   freqList.add(8419);
+   freqList.add(8457);
+   freqList.add(8472);
+   */
 
-  currentFreqIndex =-1;
   Ani.init(this);
 
   // define a Ani with callbacks, specify the method name after the keywords: onStart, onEnd, onDelayEnd and onUpdate 
@@ -240,20 +266,22 @@ void nextFreq()
 
   currentFreqIndex++;
 
-  //currentFreqIndex = (int)random(freqList.size()-1);
+  if (currentMode == 2)
+    currentFreqIndex = (int)random(freqList.size()-1);
+
   timeBetweenFrequencies = 8.5f;
 
   if (currentFreqIndex >=freqList.size())
     currentFreqIndex = 0;
 
-  int dice = (int)random(90);
+  int dice = (int)random(15);
   boolean isMovingPattern = false;
   if (dice >= 1)
   {
     lowFreqAni = new Ani(this, 0.2, timeBetweenFrequencies, "oscFreq", (int)freqList.get(currentFreqIndex), Ani.LINEAR, "onEnd:nextFreq");
 
-    //int f = (int)random(500, 5000);
-    //lowFreqAni = new Ani(this, 50.5, 5.5, "oscFreq",f, Ani.LINEAR, "onEnd:nextFreq");
+    //int f = (int)random(8000, 32000);
+    //lowFreqAni = new Ani(this, 12.5, 5.5, "oscFreq",f, Ani.LINEAR, "onEnd:nextFreq");
   } else
   {
     lowFreqAni = new Ani(this, 0.2, timeBetweenFrequencies, "oscFreq", 2582, Ani.LINEAR, "onEnd:nextFreq"); 
@@ -261,7 +289,7 @@ void nextFreq()
   }
 
   //50.8
-  dice = (int)random(4); 
+  dice = (int)random(5); 
   int randomHighFreq = 0;
   if (dice < 1)
   {
@@ -270,7 +298,7 @@ void nextFreq()
     //else
     //  highFreqAmpAni = new Ani(this, timeBetweenFrequencies/2.0f, timeBetweenFrequencies/2.0f, "highFreqAmplitude", 0, Ani.LINEAR);
 
-    lowFreqAmpAni = new Ani(this, timeBetweenFrequencies, "lowFreqAmplitude", 0, Ani.LINEAR);
+    lowFreqAmpAni = new Ani(this, timeBetweenFrequencies/2.0, "lowFreqAmplitude", 0, Ani.LINEAR);
 
     // high freq patterns
     dice = (int)random(3); 
@@ -309,10 +337,16 @@ void nextFreq()
   println( "CurrentHighFreq: " + randomHighFreq);
 }
 
-
-void draw()
+void updateAudio()
 {
-  //frameRate(30);
+
+  // Update audio
+  lowFreqWave.setAmplitude(lowFreqAmplitude / 100.0f );
+  lowFreqWave.setFrequency( oscFreq / 10.0f );
+
+  highFreqWave.setAmplitude(highFreqAmplitude / 100.0f );
+  highFreqWave.setFrequency( highFreqWaveValue );
+
   background(0);
   stroke(110);
   strokeWeight(1);
@@ -333,11 +367,6 @@ void draw()
     point( i, height/2 - (height*0.49) * lowFreqWave.getWaveform().value( (float)i / width ) );
   }
 
-  lowFreqWave.setAmplitude(lowFreqAmplitude / 100.0f );
-  lowFreqWave.setFrequency( oscFreq / 10.0f );
-
-  highFreqWave.setAmplitude(highFreqAmplitude / 100.0f );
-  highFreqWave.setFrequency( highFreqWaveValue );
   textSize(90);
   textAlign(CENTER, CENTER);
   text( oscFreq  / 10.0f + " Hz", width/2, height/2);
@@ -347,10 +376,26 @@ void draw()
   textAlign(CENTER, CENTER);
   text( frameRate, 22, 12);
 
-
   textSize(12);
   textAlign(CENTER, CENTER);
   text( currentFreqIndex, 22, 24);
+}
+
+void calibrate()
+{
+  lowFreqWave.setAmplitude( 1.0f );
+  lowFreqWave.setFrequency( calibrationFreq/10.0f  );
+
+  highFreqWave.setAmplitude( 1.0f);
+  highFreqWave.setFrequency( 25000 );
+}
+
+void draw()
+{
+  if (currentMode == 0 )
+    calibrate();
+  else
+    updateAudio();
 
   //println(highFreqAmplitude);
 }
@@ -374,13 +419,20 @@ void keyPressed()
 { 
   switch( key )
   {
-  case '+':
-    oscFreq += 100;
+  case '0':
+    currentMode = 0;
     break;
-
-
+  case '1':
+    currentMode = 1;
+    break;
+  case '2':
+    currentMode = 2;
+    break;
+  case '+':
+    calibrationFreq--;
+    break;
   case '-':
-    oscFreq -= 100;
+    calibrationFreq++;
     break;
 
 
